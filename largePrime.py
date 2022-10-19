@@ -41,7 +41,7 @@ def solovoy_strassen(number_to_test, iterations):
         jacobian_number = libnum.jacobi(a,number_to_test)
         mod = pow(a, (number_to_test-1)//2, number_to_test) #a^(n-1)/2 mod n
        
-        if ((jacobian_number == 1 and mod == 1) or (jacobian_number == -1 and mod == number_to_test - 1)):
+        if ((jacobian_number == mod) or (jacobian_number == -1 and mod == number_to_test - 1)):
             return True
  
     return False
