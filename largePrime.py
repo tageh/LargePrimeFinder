@@ -26,7 +26,7 @@ def miller_rabin(number_to_test, iterations):
             continue
         
         for _ in range(k-1):
-            b = (b^2) % number_to_test #Write b as b^2 mod number_to_test
+            b = (b**2) % number_to_test #Write b as b^2 mod number_to_test
             if b == b-1: #Checks if b is equal to b-1
                 break #If so, break out of loop, return True
         else:
