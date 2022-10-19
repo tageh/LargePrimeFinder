@@ -1,9 +1,10 @@
 import random
 import time
 import math
+import libnum
 
 def generate_odd_number():
-    big_number = random.getrandbits(10) #Generate random 1024 bit number
+    big_number = random.getrandbits(1024) #Generate random 1024 bit number
     if (big_number % 2) != 0: #Checks if number is odd
         odd = big_number
     else:
@@ -79,44 +80,33 @@ def jacobian(a, number_to_test):
 def solovoy_strassen(number_to_test, iterations):
     for _ in range(iterations):
         # Generate a random number a
-        a = random.randint(2,number_to_test - 1);
-        jacobian_number = (number_to_test + jacobian(a, number_to_test)) % number_to_test;
-        mod = pow(a, int((number_to_test-1)/2), number_to_test) #a^(n-1)/2 mod n
-
-        x = (a/number_to_test)
-        test1 = pow(a, int((number_to_test-1)/2))
-        xmodn = x%number_to_test
-
-        print("a/n:   ", x, "\nxmodn: ",xmodn,"\na^(n-1)/2 :",test1)
-        print("a: ",a,"\nnumber_to_test: ",number_to_test)
-        print("Jacobian symbol: ",jacobian(a,number_to_test))
-        print("Jacobian number: ", jacobian_number)
-        print("Mod: ",mod)
-        print("\n")
+        a = random.randint(2,number_to_test - 1)
+        jacobian_number = libnum.jacobi(a,number_to_test)
+        mod = pow(a, (number_to_test-1)//2, number_to_test) #a^(n-1)/2 mod n
+       
+        if ((jacobian_number == 1 and mod == 1) or (jacobian_number == -1 and mod == number_to_test -1)):
+            return True
  
-        if (jacobian_number == 0 or mod != jacobian_number):
-            return False;
- 
-    return True;
+    return False
 
 iterations = 50
 tested_number = generate_odd_number()
-#try_number = 2359387295841603593872497896878874911354964981437788423001084377685944959437718053927835500869359979283068184632251708346109938684331052172298133038997763758508710452918070355313179108348018708020045284488899366383442690192063712113658805209824845665266206807184787493604374694215753343981094706853471784559
+try_number = 2359387295841603593872497896878874911354964981437788423001084377685944959437718053927835500869359979283068184632251708346109938684331052172298133038997763758508710452918070355313179108348018708020045284488899366383442690192063712113658805209824845665266206807184787493604374694215753343981094706853471784559
 
 #start_time = time.time()
-#print(miller_rabin(try_number,50))
+#print(solovoy_strassen(try_number,50))
 #print("--- %s seconds ---" % (time.time() - start_time))
-
 prime_list = []
-while len(prime_list) < 1:
+while len(prime_list) < 2:
     prime_check = miller_rabin(tested_number, iterations) 
     if prime_check == True:
         second_check = solovoy_strassen(tested_number, iterations)
         if second_check == True:
             print("Miller-Rabin: ", prime_check)
             print("Solovay-Strassen: ",second_check)
-            print("Passed both tests: ",tested_number)
+            print("Passed both tests: ",tested_number, "\n")
             prime_list.append(tested_number)
-            break
      
     tested_number = generate_odd_number()
+
+
