@@ -54,7 +54,7 @@ def solovoy_strassen(number_to_test, iterations):
 iterations = 50 #Sets number of iterations
 tested_number = generate_odd_number() #Generate random number to test
 prime_list = [] #List to store found numbers in
-
+numbers_tested = 0
 #Automation proceess to find possible prime numbers
 
 while len(prime_list) < 2: #Loops through numbers till it finds two "primes"
@@ -62,12 +62,13 @@ while len(prime_list) < 2: #Loops through numbers till it finds two "primes"
     if miller_rabin_check: #If the passes Miller-Rabin 
         solovoy_strassen_check = solovoy_strassen(tested_number, iterations) #Tests Solovay-Strassen algorithm
         if solovoy_strassen_check: #If the number passes both algorithms, it has a high probability of begin prime
-            print("Miller-Rabin: ", miller_rabin_check) #Print outcome of Miller-Rabin test
-            print("Solovay-Strassen: ",solovoy_strassen_check) #Print outcome of Solovay-Strassen test
-            print("Passed both tests: ",tested_number, "\n") #Print number that has passed both tests
+            print("Miller-Rabin:", miller_rabin_check) #Print outcome of Miller-Rabin test
+            print("Solovay-Strassen:",solovoy_strassen_check) #Print outcome of Solovay-Strassen test
+            print("Passed both tests:",tested_number, "\n") #Print number that has passed both tests
             prime_list.append(tested_number) #Addes the number to the list
      
     tested_number = generate_odd_number() #Generate new random number to be tested
+    numbers_tested += 1
 
 
 #Automated proceess to time numbers found in previus step
@@ -84,3 +85,4 @@ for i in range(len(prime_list)): #Loops through the length of the list
     print("--- %s seconds ---" % (time.time() - start_time)) #Prints time is took for Solovay-Strassen
     print("\n")
 
+print("Total numbers tested:", numbers_tested)
