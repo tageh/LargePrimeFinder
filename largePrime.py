@@ -4,6 +4,10 @@ import libnum
 
 def generate_odd_number():
     big_number = random.getrandbits(1024) #Generate random 1024 bit number
+    
+    while big_number.bit_length() != 1024: #Make sure number is 1024 bit
+        big_number = random.getrandbits(1024)
+
     if (big_number % 2) != 0: #Checks if number is odd
         odd = big_number
     else:
@@ -51,6 +55,7 @@ def solovoy_strassen(number_to_test, iterations):
 iterations = 50
 tested_number = generate_odd_number()
 prime_list = []
+
 while len(prime_list) < 2:
     miller_rabin_check = miller_rabin(tested_number, iterations) 
     if miller_rabin_check:
@@ -75,3 +80,4 @@ for i in range(len(prime_list)):
     print("Solovay-Strassen time:")
     print("--- %s seconds ---" % (time.time() - start_time))
     print("\n")
+
