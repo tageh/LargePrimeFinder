@@ -1,6 +1,6 @@
 import random
 import time
-import libnum
+import libnum #Library used for jacobi function (pip install libnum)
 
 def generate_odd_number():
     big_number = random.getrandbits(1024) #Generate random 1024 bit number
@@ -40,44 +40,47 @@ def miller_rabin(number_to_test, iterations):
 
 def solovoy_strassen(number_to_test, iterations):
     for _ in range(iterations):
-        # Generate a random number a
-        a = random.randint(2,number_to_test - 1)
-        jacobian_number = libnum.jacobi(a,number_to_test)
+        a = random.randint(2,number_to_test - 1) #Generate random a to test with
+        jacobi = libnum.jacobi(a,number_to_test) #Find the Jacobi number for number to be tested
         mod = pow(a, (number_to_test-1)//2, number_to_test) #a^(n-1)/2 mod n
        
-        if ((jacobian_number == mod) or (jacobian_number == -1 and mod == number_to_test - 1)):
-            continue
+        if ((jacobi == mod) or (jacobi == -1 and mod == number_to_test - 1)): #Checks congruence between a^(p-1)/2 and (a/p) (mod p)
+            continue #Continue if condition is true
         else:
-            return False
+            return False #Number is composite
  
-    return True
+    return True #Number can be prime
 
-iterations = 50
-tested_number = generate_odd_number()
-prime_list = []
+iterations = 50 #Sets number of iterations
+tested_number = generate_odd_number() #Generate random number to test
+prime_list = [] #List to store found numbers in
 
-while len(prime_list) < 2:
-    miller_rabin_check = miller_rabin(tested_number, iterations) 
-    if miller_rabin_check:
-        solovoy_strassen_check = solovoy_strassen(tested_number, iterations)
-        if solovoy_strassen_check:
-            print("Miller-Rabin: ", miller_rabin_check)
-            print("Solovay-Strassen: ",solovoy_strassen_check)
-            print("Passed both tests: ",tested_number, "\n")
-            prime_list.append(tested_number)
+#Automation proceess to find possible prime numbers
+
+while len(prime_list) < 2: #Loops through numbers till it finds two "primes"
+    miller_rabin_check = miller_rabin(tested_number, iterations) #Runns number through Miller-Rabin algorithm
+    if miller_rabin_check: #If the passes Miller-Rabin 
+        solovoy_strassen_check = solovoy_strassen(tested_number, iterations) #Tests Solovay-Strassen algorithm
+        if solovoy_strassen_check: #If the number passes both algorithms, it has a high probability of begin prime
+            print("Miller-Rabin: ", miller_rabin_check) #Print outcome of Miller-Rabin test
+            print("Solovay-Strassen: ",solovoy_strassen_check) #Print outcome of Solovay-Strassen test
+            print("Passed both tests: ",tested_number, "\n") #Print number that has passed both tests
+            prime_list.append(tested_number) #Addes the number to the list
      
-    tested_number = generate_odd_number()
+    tested_number = generate_odd_number() #Generate new random number to be tested
 
 
-for i in range(len(prime_list)):
-    start_time = time.time()
-    miller_rabin(prime_list[i], iterations)
+#Automated proceess to time numbers found in previus step
+
+for i in range(len(prime_list)): #Loops through the length of the list
+    start_time = time.time() #Starts timer
+    miller_rabin(prime_list[i], iterations) #Runns through Miller-Rabin algorithm
     print("Miller-Rabin time:")
-    print("--- %s seconds ---" % (time.time() - start_time))
+    print("--- %s seconds ---" % (time.time() - start_time)) #Prints time it took for Miller-Rabin
 
-    start_time = time.time() 
-    solovoy_strassen(prime_list[i], iterations)
+    start_time = time.time() #Starts time
+    solovoy_strassen(prime_list[i], iterations) #Runns through Solovay-Strassen algorithm
     print("Solovay-Strassen time:")
-    print("--- %s seconds ---" % (time.time() - start_time))
+    print("--- %s seconds ---" % (time.time() - start_time)) #Prints time is took for Solovay-Strassen
     print("\n")
 
