@@ -42,14 +42,15 @@ def solovoy_strassen(number_to_test, iterations):
         mod = pow(a, (number_to_test-1)//2, number_to_test) #a^(n-1)/2 mod n
        
         if ((jacobian_number == mod) or (jacobian_number == -1 and mod == number_to_test - 1)):
-            return True
+            continue
+        else:
+            return False
  
-    return False
+    return True
 
 iterations = 50
 tested_number = generate_odd_number()
 prime_list = []
-
 while len(prime_list) < 2:
     miller_rabin_check = miller_rabin(tested_number, iterations) 
     if miller_rabin_check:
